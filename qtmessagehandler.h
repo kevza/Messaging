@@ -18,7 +18,10 @@ class CQtHandler : public QObject
 {
   Q_OBJECT
   public:
-    CQtHandler(QObject *parent = 0) : QObject(parent){}
+    CQtHandler(QObject *parent = 0) : QObject(parent){
+        connect(this, SIGNAL(ProcessMsg()), this, SLOT(ProcessMessages()));
+    }
+
     virtual ~CQtHandler(){}
 
     void HandleMessage(boost::function<void()> fn)
@@ -28,9 +31,11 @@ class CQtHandler : public QObject
       m_Mutex.unlock();
 
       // Post event to process messages
-      QCoreApplication::postEvent(this, new QEvent(static_cast<QEvent::Type>(MsgEvent)));
+      emit ProcessMsg();
+      //QCoreApplication::postEvent(this, new QEvent(static_cast<QEvent::Type>(MsgEvent)));
     }
 
+  public slots:
     void ProcessMessages()
     {
       while (!m_Queue.empty())
@@ -43,26 +48,14 @@ class CQtHandler : public QObject
       }
 
     }
-
-    // Handle the process messages QEvent
-    bool event(QEvent *e)
-    {
-      if (e->type() == MsgEvent)
-      {
-        ProcessMessages();
-        return true;
-      }
-
-      return false;
-    }
+  signals :
+    void ProcessMsg();
 
   private:
     std::queue<boost::function<void()> > m_Queue;
     std::mutex m_Mutex;
 };
 
-
-#ifndef Q_MOC_RUN
 
 //static CQtHandler &msgHandler = CSingleton<CQtHandler>::Instance();
 // Qt Message Subscriber
@@ -81,6 +74,5 @@ class CQtMessageSubscriber : public SubscribingObject
     virtual void ProcessMessages(){}
 
 };
-#endif
 
 #endif
