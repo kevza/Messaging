@@ -22,7 +22,7 @@ class CSingleton
       return *m_Instance;
     }
 
-    void Delete()
+    static void Delete()
     {
       delete m_Instance;
       m_Instance = NULL;
@@ -32,8 +32,6 @@ class CSingleton
   private:
     static std::mutex m_Mutex;
     static T *m_Instance;
-
-
 };
 
 template <class T>
