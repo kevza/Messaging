@@ -19,7 +19,7 @@ class CQtHandler : public QObject
   Q_OBJECT
   public:
     CQtHandler(QObject *parent = 0) : QObject(parent){
-        connect(this, SIGNAL(ProcessMsg()), this, SLOT(ProcessMessages()));
+        connect(this, SIGNAL(ProcessMsg()), this, SLOT(ProcessMessages()), Qt::QueuedConnection);
     }
 
     virtual ~CQtHandler(){}
@@ -43,8 +43,11 @@ class CQtHandler : public QObject
         m_Mutex.lock();
         boost::function<void()> fn = m_Queue.front();
         m_Queue.pop();
-        fn();
         m_Mutex.unlock();
+
+        // Run the message once we have unlocked
+        // the mutex.
+        fn();
       }
 
     }
