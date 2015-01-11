@@ -35,15 +35,21 @@ class CSingleton
 };
 
 template <class T>
+std::mutex CSingleton<T>::m_Mutex;
+
+template <class T>
+T *CSingleton<T>::m_Instance = NULL;
+
+template <class T>
 class CAbstractSingleton
 {
   public:
-    static T *Instance()
+    static T &Instance()
     {
-      return m_Instance;
+      return *m_Instance;
     }
 
-    static void SetInstance(T &instance)
+    static void SetInstance(T *instance)
     {
       m_Instance = instance;
     }
@@ -60,9 +66,6 @@ class CAbstractSingleton
 };
 
 template <class T>
-std::mutex CSingleton<T>::m_Mutex;
-
-template <class T>
-T *CSingleton<T>::m_Instance = NULL;
+T *CAbstractSingleton<T>::m_Instance;
 
 #endif
