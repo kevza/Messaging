@@ -35,6 +35,31 @@ class CSingleton
 };
 
 template <class T>
+class CAbstractSingleton
+{
+  public:
+    static T *Instance()
+    {
+      return m_Instance;
+    }
+
+    static void SetInstance(T &instance)
+    {
+      m_Instance = instance;
+    }
+
+    static void Delete()
+    {
+      delete m_Instance;
+      m_Instance = NULL;
+    }
+
+  private:
+    static T *m_Instance;
+
+};
+
+template <class T>
 std::mutex CSingleton<T>::m_Mutex;
 
 template <class T>
