@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QEvent>
 #include <QDebug>
+#include <QThread>
 #include <boost/function.hpp>
 
 #define MsgEvent QEvent::User + 1
@@ -64,14 +65,19 @@ class CQtHandler : public QObject
 // Qt Message Subscriber
 class CQtMessageSubscriber : public SubscribingObject
 {
+  CQtHandler *m_MessageHandler;
   public:
-    CQtMessageSubscriber(){}
+    CQtMessageSubscriber(QObject *parent = 0) {
+      m_MessageHandler = new CQtHandler(parent);
+    }
+
     virtual ~CQtMessageSubscriber(){
+      m_MessageHandler->deleteLater();
     }
 
     virtual void HandleMessage(boost::function<void()> fn)
     {
-        CSingleton<CQtHandler>::Instance().HandleMessage(fn);
+        m_MessageHandler->HandleMessage(fn);
     }
     // We don't actually process messages here
     virtual void ProcessMessages(){}
