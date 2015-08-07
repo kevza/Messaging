@@ -5,10 +5,9 @@
 #include <mutex>
 #include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
+#include <QDebug>
 
 // Lock for Subscribing object id generation
-static std::mutex m_Mutex;
-static int m_Id;
 // Parent of subscribing class
 class SubscribingObject
 {
@@ -52,6 +51,10 @@ class SubscribingObject
 
   private:
     //static int m_Id;
+
+    static std::mutex m_Mutex;
+    static int m_Id;
+
     int m_MyId;
     std::queue<boost::function<void()> > m_MessageQueue;
 };

@@ -45,7 +45,6 @@ class CQtHandler : public QObject
         boost::function<void()> fn = m_Queue.front();
         m_Queue.pop();
         m_Mutex.unlock();
-
         // Run the message once we have unlocked
         // the mutex.
         fn();
