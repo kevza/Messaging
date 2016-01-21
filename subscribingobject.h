@@ -59,5 +59,4 @@ class SubscribingObject
     std::queue<boost::function<void()> > m_MessageQueue;
 };
 
-
 #endif // C_SUBSCRIBING_OBJECT

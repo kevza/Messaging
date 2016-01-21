@@ -5,7 +5,11 @@
 class CDirectSubscriber : public SubscribingObject
 {
   public:
-    CDirectSubscriber(QObject *parent = 0) {
+    CDirectSubscriber() {
+
+    }
+
+    CDirectSubscriber(QObject *parent) {
     }
 
     virtual ~CDirectSubscriber(){

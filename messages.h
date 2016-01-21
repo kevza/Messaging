@@ -1,6 +1,7 @@
 #ifndef C_MESSAGES
 #define C_MESSAGES
 
+#include <cassert>
 #include <queue>
 #include <map>
 #include <mutex>
@@ -51,6 +52,7 @@ class CMessage
         fn =  boost::bind(handler.m_Fn, messagePointer);
 
         // Trigger handle message on the object
+        assert(handler.m_Obj);
         handler.m_Obj->HandleMessage(fn);
       }
       m_Mutex.unlock();
@@ -73,7 +75,10 @@ class CMessage
     static void RemoveSubscriber(int id)
     {
       m_Mutex.lock();
-      m_Subscribers.erase(id);
+      if (m_Subscribers.find(id) != m_Subscribers.end())
+      {
+        m_Subscribers.erase(id);
+      }
       m_Mutex.unlock();
     }
 
@@ -130,6 +135,10 @@ class Subscriber<AtRate<H, R, T> > : public Subscriber<T>
     {
       CMessage<H>::RemoveSubscriber(m_Subscriber->Uid());
       Subscriber<T>::Unsubscribe();
+    }
+
+    virtual ~Subscriber() {
+        Unsubscribe();
     }
 
   private:
