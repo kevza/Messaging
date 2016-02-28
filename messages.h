@@ -114,6 +114,8 @@ template <typename H, int R, typename T>
 class Subscriber<AtRate<H, R, T> > : public Subscriber<T>
 {
   public:
+    Subscriber() :
+        m_Subscriber(NULL){}
     /**
      * @brief Connects the subscriber to
      * the messages
@@ -133,7 +135,10 @@ class Subscriber<AtRate<H, R, T> > : public Subscriber<T>
      */
     void Unsubscribe()
     {
-      CMessage<H>::RemoveSubscriber(m_Subscriber->Uid());
+      if (m_Subscriber)
+      {
+        CMessage<H>::RemoveSubscriber(m_Subscriber->Uid());
+      }
       Subscriber<T>::Unsubscribe();
     }
 

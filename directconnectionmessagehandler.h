@@ -9,7 +9,7 @@ class CDirectSubscriber : public SubscribingObject
 
     }
 
-    CDirectSubscriber(QObject *parent) {
+    CDirectSubscriber(QObject *) {
     }
 
     virtual ~CDirectSubscriber(){
