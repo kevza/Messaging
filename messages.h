@@ -38,9 +38,14 @@ class CMessage
      */
     static void Publish(T *ptr)    
     {
-      m_Mutex.lock();
       boost::shared_ptr<const T> messagePointer(ptr);
+      Publish(messagePointer);
 
+    }
+
+    static void Publish(boost::shared_ptr<const T> messagePointer)
+    {
+      m_Mutex.lock();
       typename std::map<int, MessageContainer<T> >::iterator it = m_Subscribers.begin();
       for (;it != m_Subscribers.end(); ++it)
       {
@@ -56,6 +61,7 @@ class CMessage
         handler.m_Obj->HandleMessage(fn);
       }
       m_Mutex.unlock();
+
     }
 
     // Register a subscriber with this message type
